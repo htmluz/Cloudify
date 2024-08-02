@@ -9,10 +9,10 @@ export function SpotifyButton({ label, onClick, className = '', disabled }: Butt
 	return (
 		<button
 			onClick={onClick}
-			className="bg-[#1ed760] text-[#000000] font-bold ps-[32px] pe-[32px] py-[8px] rounded-full"
+			className={`bg-[#1ed760] text-[#000000] font-bold ps-[32px] pe-[32px] py-[8px] rounded-full ${className}`}
 			disabled={disabled}
 		>
-					{label}
+			{label}
 		</button>
 	)
 }

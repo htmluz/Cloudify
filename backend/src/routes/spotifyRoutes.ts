@@ -13,7 +13,7 @@ router.get('/authorize', (req, res) => {
               `response_type=code&` +
               `client_id=${c_id}&` +
               `scope=${encodeURIComponent(scope)}&` +
-              `redirect_uri=http://localhost:42069/spotify/logged&` +
+              `redirect_uri=http://localhost:5173&` +
 							`state=${generateRandomString(16)}`;
 	//TODO: alterar essa bomba de url pra URLParams
 

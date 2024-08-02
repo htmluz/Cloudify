@@ -1,20 +1,36 @@
 import './App.css'
-import { SpotifyButton } from './components/button'
-import axios from 'axios';
+import { AuthProvider } from './context/AuthContext';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import LoginPage from './pages/loginPage';
+import HomePage from './pages/homePage';
+import ErrorPage from './pages/errorPage';
+import Unauthorized from './components/unauthorized';
 
+const router = createBrowserRouter(
+	createRoutesFromElements(
+		<Route errorElement={<ErrorPage />}>
+			<Route 
+				path='/login' 
+				element={<LoginPage />}
+			/>
+			<Route
+				path='/'
+				element={
+					<Unauthorized>
+						<HomePage />
+					</Unauthorized>
+				}
+			/>
+		</Route>
+	)
+);
 
 function App() {
-  const handleClick = async () => {
-		const r = await axios.get("http://localhost:42069/spotify/authorize")
-		window.location.href = r.data
-  };
 
   return (
-    <>
-      <div>
-				<SpotifyButton label='Login with Spotify' onClick={handleClick} />
-      </div>
-    </>
+		<AuthProvider>	
+			<RouterProvider router={router} />
+		</AuthProvider>
   )
 }
 
