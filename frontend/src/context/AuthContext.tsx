@@ -14,8 +14,8 @@ type AuthProviderProps = {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-	const [isAuthenticated, setIsAuthenticated] = useState(false); 
-	const [token, setToken] = useState('')
+	const [isAuthenticated, setIsAuthenticated] = useState(true); 
+	const [token, setToken] = useState('');
 
 	function login(t: string) {
 			setIsAuthenticated(true);
@@ -27,7 +27,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 	};	
 
 	return (
-		<AuthContext.Provider value={{ isAuthenticated, login, logout, token }}>
+		<AuthContext.Provider value={{ isAuthenticated, login, logout, token, }}>
 			{children}
 		</AuthContext.Provider>
 	)

@@ -5,6 +5,8 @@ import LoginPage from './pages/loginPage';
 import HomePage from './pages/homePage';
 import ErrorPage from './pages/errorPage';
 import Unauthorized from './components/unauthorized';
+import Protected from './components/protected';
+import LogginIn from './pages/logginIn';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -16,10 +18,14 @@ const router = createBrowserRouter(
 			<Route
 				path='/'
 				element={
-					<Unauthorized>
+					<Protected>
 						<HomePage />
-					</Unauthorized>
+					</Protected>
 				}
+			/>
+			<Route
+				path='/logginIn'
+				element={<LogginIn />}
 			/>
 		</Route>
 	)
