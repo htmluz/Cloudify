@@ -1,30 +1,22 @@
-import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
+
+import passport from "passport";
+import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
-import spotifyRoutes from './routes/spotifyRoutes';
-import getSpotifyToken from './middleware/spotifyAuth';
-
-dotenv.config();
+import { teste } from './config/database-config';
 
 const app = express();
 const PORT = 42069;
 
 app.use(cors())
-
-app.get('/', async (req, res) => {
-	const token = await getSpotifyToken();
-	const h = {
-		headers: {
-			Authorization: `Bearer ${token}`
-		} 
-	}	
-	const r = await axios.get("https://api.spotify.com/v1/artists/7kJlA28zS73R2HbzBGSbVg", h)
-	res.send(r.data);
-})
+app.use(passport.initialize());
 
 
-app.use('/spotify', spotifyRoutes)
+teste("pipokinha", "123", "al@g.com")
+app.get('/', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private']}));
+
 
 app.listen(PORT, () => {
 	console.log(`rodando UwU http://localhost:${PORT}`);

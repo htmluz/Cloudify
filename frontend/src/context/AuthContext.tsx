@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
+import { create } from 'zustand';
 
 interface AuthContextProps {
 		isAuthenticated: boolean;
@@ -7,9 +8,20 @@ interface AuthContextProps {
 		token?: string;
 }
 
+interface SpotifyState {
+	access_token: string;
+	setAccessToken: (t: string) => void;
+}
+
 type AuthProviderProps = {
 		children: ReactNode;
 }
+
+export const useSpotifyAuth = create<SpotifyState>()((set) => ({
+	access_token: '',
+	setAccessToken: (t) => set(() => ({ access_token: t }))
+}))
+
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
