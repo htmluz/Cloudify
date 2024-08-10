@@ -1,4 +1,4 @@
-import pg, { Pool, QueryResult } from 'pg';
+import pg, { Pool } from 'pg';
 import { 
 	POSTGRES_USER, 
 	POSTGRES_DB, 
@@ -15,21 +15,5 @@ const pool: pg.Pool = new Pool({
 	password: POSTGRES_PASSWORD,
 })
 
-interface User {
-	id: Number;
-	username: string;
-	password: string;
-	email: string;
-	created_at: Date;
-}
-
-export const teste = async (username: string, password: string, email: string): Promise<User> => {
-	const res: QueryResult<User> = await pool.query(
-		'INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING *;',
-		[username, password, email]
-	);
-	console.log(res.rows[0])
-	return res.rows[0]
-}
 
 export default pool;
