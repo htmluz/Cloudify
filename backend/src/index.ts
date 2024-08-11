@@ -2,11 +2,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import passport from "passport";
-import express from 'express';
+import express, { Request, Response } from 'express';
 import session from 'express-session'
 import axios from 'axios';
 import cors from 'cors';
 import './config/passport-setup'
+import * as UserDB from "./db/user"
 
 const app = express();
 const PORT = 42069;
@@ -15,6 +16,8 @@ app.use(cors({origin: '*'}))
 
 app.use(session({
 	secret: 'abc',
+	resave: false,
+	saveUninitialized: false
 }))
 app.use(passport.initialize());
 
@@ -39,9 +42,22 @@ app.get('/auth/spotify', passport.authenticate('spotify', {
 	]
 }));
 
-app.get('/auth/spotify/logged', passport.authenticate('spotify'), (req, res) => {
-	console.log(req.user)
-	res.redirect('http://localhost:5173/')
+interface UserProfile {
+	id?: string;
+	displayName?: string;
+}
+
+interface UserRequest extends Request {
+	user?: UserProfile;
+}
+
+app.get('/auth/spotify/logged', passport.authenticate('spotify'), async (req: UserRequest, res) => {
+	if (req.user) {
+		if (req.user.id) {
+			const token = await UserDB.returnSpotifyToken(req.user.id)
+			res.redirect(`http://localhost:5173/?token=${token}`)
+		}
+	}
 })
 
 app.listen(PORT, () => {

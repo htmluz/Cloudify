@@ -9,6 +9,9 @@ type OAuthStrategy = Parameters<typeof refresh.use>[0];
 
 const { Strategy: SpotifyStrategy } = passportSpotify;
 
+passport.serializeUser((user, done) => {
+	done(null, user)
+})
 
 const SpotifyAuth = new SpotifyStrategy(
 	{

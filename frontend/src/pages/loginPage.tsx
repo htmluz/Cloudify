@@ -1,5 +1,4 @@
 import { SpotifyButton } from '../components/button'
-import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
   const handleClick = async () => {
