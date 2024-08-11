@@ -1,16 +1,17 @@
 import dotenv from 'dotenv';
 dotenv.config();
+import { DEV_URL, DEV_PORT } from './lib/constants';
+
 
 import passport from "passport";
-import express, { Request, Response } from 'express';
-import session from 'express-session'
-import axios from 'axios';
+import express, { Request } from 'express';
+import session from 'express-session';
+import refresh from 'passport-oauth2-refresh';
 import cors from 'cors';
-import './config/passport-setup'
-import * as UserDB from "./db/user"
+import './config/passport-setup';
+import * as UserDB from "./db/user";
 
 const app = express();
-const PORT = 42069;
 
 app.use(cors({origin: '*'}))
 
@@ -54,12 +55,44 @@ interface UserRequest extends Request {
 app.get('/auth/spotify/logged', passport.authenticate('spotify'), async (req: UserRequest, res) => {
 	if (req.user) {
 		if (req.user.id) {
+      const id = req.user.id;
 			const token = await UserDB.returnSpotifyToken(req.user.id)
-			res.redirect(`http://localhost:5173/?token=${token}`)
+			res.redirect(`http://localhost:5173?id=${id}&token=${token}`)
 		}
 	}
+  else res.redirect(DEV_URL)
 })
 
-app.listen(PORT, () => {
-	console.log(`rodando UwU http://localhost:${PORT}`);
+app.get('/auth/spotify/refreshtoken', async (req: UserRequest, res) => {
+  try {
+    let id = req.query.id;
+    if (id !== undefined) {
+      if (id !== 'string') {
+        id = String(id)
+      }
+    }
+    if (id) {
+      const refresh_token = await UserDB.getRefreshTokenSpotify(id);
+      if (refresh_token) {
+        refresh.requestNewAccessToken('spotify', refresh_token, async function (err, accesToken, refreshToken) {
+          if (err) console.log(err)
+          else {
+            const b = String(accesToken)
+            const c = String(refreshToken)
+            const r = await UserDB.updateAccessTokenSpotify(id, b, c)
+            res.send(b)
+          }
+        })
+      }
+    } 
+  } catch {
+    res.send(404)
+  }
 })
+
+
+
+app.listen(DEV_PORT, () => {
+	console.log(`rodando UwU ${DEV_URL}`);
+})
+
