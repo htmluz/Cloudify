@@ -9,34 +9,34 @@ import Protected from './components/protected';
 import LogginIn from './pages/logginIn';
 
 const router = createBrowserRouter(
-	createRoutesFromElements(
-		<Route errorElement={<ErrorPage />}>
-			<Route 
-				path='/login' 
-				element={<LoginPage />}
-			/>
-			<Route
-				path='/'
-				element={
-					<Protected>
-						<HomePage />
-					</Protected>
-				}
-			/>
-			<Route
-				path='/logginIn'
-				element={<LogginIn />}
-			/>
-		</Route>
-	)
+  createRoutesFromElements(
+    <Route errorElement={<ErrorPage />}>
+      <Route 
+        path='/login' 
+        element={<LoginPage />}
+      />
+      <Route
+        path='/'
+        element={
+          <Protected>
+            <HomePage />
+          </Protected>
+        }
+      />
+      <Route
+        path='/logginIn'
+        element={<LogginIn />}
+      />
+    </Route>
+  )
 );
 
 function App() {
 
   return (
-		<AuthProvider>	
-			<RouterProvider router={router} />
-		</AuthProvider>
+    <AuthProvider>  
+      <RouterProvider router={router} />
+    </AuthProvider>
   )
 }
 
